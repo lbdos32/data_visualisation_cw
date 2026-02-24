@@ -1,0 +1,12 @@
+body{
+    background-color: white;
+}
+#bar1, #bubble1 {
+    height: 300px;
+    background-color: white;
+    border: 2px solid blue;
+}
+
+svg {
+    background: white;
+}
