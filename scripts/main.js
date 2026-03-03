@@ -1,24 +1,23 @@
 import Barchart from "./Barchart.js";
 'use strict';
 
-let barchart1 = new Barchart('div#bar1', 1200, 500, "Industry Direct Use 1990");
-
+let barchart1 = new Barchart('div#bar1', 1200, 500, "Total Direct Energy Use Per Year");
 d3.csv("data/Table1a_Direct_use.csv").then(dataset => {
 
-    // Pick the row for 1990
-    const row = dataset.find(d => d.Industry === "1990");
-
-    // Get all columns except the first (Industry) and last (Total)
-    const columns = dataset.columns.slice(1, -1);
-
-    // Map data, convert non-numeric to 0
-    const barData = columns.map(col => ({
-        k: col,
-        v: isNaN(+row[col]) ? 0 : +row[col]
+    const totalData = dataset.map(d => ({
+        k: d.Industry,           // year label
+        v: +d.Total || 0         // numeric value
     }));
+    console.log(totalData);
+    barchart1.render(totalData);
+});
 
-    console.log(barData); // verify the array
-
-    // Render the chart
-    barchart1.render(barData);
+let barchart2 = new Barchart('div#bar2', 1200, 500, "Reallocated Energy Use Per Year");
+d3.csv("data/Table1b_Reallocated_use.csv").then(dataset => {
+    const totalData = dataset.map(d => ({
+        k: d.Industry,   // year label
+        v: +d.Total || 0 // numeric value
+    }));
+    console.log(totalData);
+    barchart2.render(totalData);
 });
