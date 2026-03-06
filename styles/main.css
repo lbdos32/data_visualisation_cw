@@ -1,12 +1,22 @@
 body{
     background-color: white;
 }
-#bar1, #bubble1 {
-    height: 300px;
-    background-color: white;
-    border: 2px solid blue;
+#bar1, #bar2, #Gbar1, #line1 {
+    width: 100%;
+    max-width: 1200px;
+    height: 600px;
+    margin: 20px auto;
+    border: 2px solid #ccc;
+}
+#Multiline1 {
+width: 100%;
+    max-width: 1275px;
+    height: 600px;
+    margin: 20px auto;
+    border: 2px solid #ccc;
 }
 
-svg {
-    background: white;
-}
+
+#bar1 svg, #bar2 svg {
+    display: block;
+    margin: 0 auto;

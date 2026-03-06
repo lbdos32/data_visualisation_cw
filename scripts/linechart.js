@@ -1,11 +1,10 @@
-export default class Barchart {
-    constructor(container, width, height, chartTitle, onSelectionChange=null) {
+export default class Linechart {
+    constructor(container, width, height, chartTitle) {
         this.container = container;
         this.width = width;
         this.height = height;
         this.chartTitle = chartTitle;
         this.selectedKeys = [];
-        this.onSelectionChange = onSelectionChange;
         this.margin = { top: 60, right: 20, bottom: 150, left: 60 };
         this.svg = d3.select(container)
             .append("svg")
@@ -14,32 +13,38 @@ export default class Barchart {
         this.chartGroup = this.svg.append("g")
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
     }
-
     render(data) {
         this.data = data;
-        //chart dimensions
         const chartWidth = this.width - this.margin.left - this.margin.right;
         const chartHeight = this.height;
         const self = this;
-        const xScale = d3.scaleBand()
+        const xScale = d3.scalePoint()
             .domain(data.map(d => d.k))
-            .range([0, chartWidth])
-            .padding(0.1);
-
+            .range([0, chartWidth]);
         const yScale = d3.scaleLinear()
             .domain([0, d3.max(data, d => d.v)])
             .range([chartHeight, 0]);
-
-        this.chartGroup.selectAll("*").remove(); //removes previous when rerendered
-
-        this.chartGroup.selectAll("rect") //creating the actual bars
+        this.chartGroup.selectAll("*").remove();
+        // Line generator
+        const line = d3.line()
+            .x(d => xScale(d.k))
+            .y(d => yScale(d.v));
+        // Draw line
+        this.chartGroup.append("path")
+            .datum(data)
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 2)
+            .attr("d", line);
+        // Draw points
+        this.chartGroup.selectAll("circle")
             .data(data)
-            .join("rect")
-            .attr("x", d => xScale(d.k))
-            .attr("y", d => yScale(d.v))
-            .attr("width", xScale.bandwidth())
-            .attr("height", d => chartHeight - yScale(d.v))
+            .join("circle")
+            .attr("cx", d => xScale(d.k))
+            .attr("cy", d => yScale(d.v))
+            .attr("r", 5)
             .attr("fill", d => self.selectedKeys.includes(d.k) ? "red" : "steelblue")
+            //mouse events only work for the node not the line between nodes.
             .on("mouseover", function(event, d) {
                 if (!self.selectedKeys.includes(d.k)) {
                     d3.select(this).attr("fill", "orange");
@@ -57,10 +62,6 @@ export default class Barchart {
                     self.selectedKeys.push(d.k);
                 }
                 self.render(self.data);
-                // call callback if it exists
-                if (self.onSelectionChange) {
-                    self.onSelectionChange(self.selectedKeys);
-                }
             });
         // X-axis
         const xAxis = d3.axisBottom(xScale);
@@ -73,6 +74,7 @@ export default class Barchart {
             .attr("font-size", "10px");
         // Y-axis
         const yAxis = d3.axisLeft(yScale);
+
         this.chartGroup.append("g")
             .call(yAxis);
         // Chart title
