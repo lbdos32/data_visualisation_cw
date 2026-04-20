@@ -2,22 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UK Renewable Energy Treemap</title>
     <link rel="stylesheet" href="styles/main.css">
     <script src="libs/d3.v7.min.js"></script>
 </head>
 <body>
-<h1>This is a dashboard prototype to visualise the amount of energy wasted</h1>
-<div id="bar1"></div>
-<div id="bar2"></div>
-<div id="Gbar1"></div>
-<div id="buttons"></div>
-<div id="Multiline1"></div>
-<div id="line1"></div>
-<div id="treemap"></div>
 
+<h1>UK Renewable Energy Sources</h1>
 
+<div id="year-row">
+    <label for="year-select">Year</label>
+    <select id="year-select"></select>
+    <span id="total-label">Total renewable: <span id="total-val">—</span> Mtoe</span>
+</div>
 
-<script type = "module" src="scripts/main.js"></script>
-</body>
+<div id="breadcrumb"></div>
+<button id="back-btn">← back to categories</button>
+<div id="treemap-container"></div>
+
+<script type="module" src="scripts/main.js"></script></body>
 </html>
