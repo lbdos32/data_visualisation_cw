@@ -1,0 +1,19 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #fff; color: #111; padding: 24px; }
+h1 { font-size: 18px; font-weight: 500; margin-bottom: 16px; }
+#year-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; font-size: 13px; color: #555; }
+#year-select { font-size: 13px; padding: 4px 8px; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #111; }
+#total-label { margin-left: auto; font-size: 13px; color: #555; }
+#total-val { font-weight: 500; color: #111; }
+#breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #555; margin-bottom: 8px; min-height: 24px; }
+#breadcrumb .crumb-link { cursor: pointer; color: #1a6bb5; }
+#breadcrumb .crumb-link:hover { text-decoration: underline; }
+.crumb-sep { color: #aaa; }
+#back-btn { display: none; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; color: #1a6bb5; border: none; background: none; padding: 0; margin-bottom: 12px; }
+#back-btn:hover { text-decoration: underline; }
+#treemap-container {
+    width: 100%;
+}
+.tm-cell { cursor: pointer; }
+.tm-cell rect { transition: opacity 0.15s; }
+.tm-cell:hover rect { opacity: 0.78; }
