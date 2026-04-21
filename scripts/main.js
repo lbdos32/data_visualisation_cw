@@ -1,15 +1,45 @@
 import { Treemap } from './Treemap.js';
 import Barchart from "./Barchart.js";
+import GroupedBarchart from "./GroupedBarchart.js";
 
 
 
+//------------------------- Energy Uses -------------------------------
+//Category grouping for industries.
+const INDUSTRY_GROUPS = {
+  "Primary": [ //raw materials
+    "Agriculture, forestry and fishing",
+    "Mining and quarrying"
+  ],
 
-// 1. Set graph dimensions to be uniform.
-const width = 1200;
-const height = 500;
+  "Secondary": [ //manufacturing/processing raw materials
+    "Manufacturing",
+    "Electricity, gas, steam and air conditioning supply",
+    "Water supply; sewerage, waste management and remediation activities",
+    "Construction"
+  ],
 
+  "Tertiary": [ //service sector
+    "Wholesale and retail trade; repair of motor vehicles and motorcycles",
+    "Transport and storage",
+    "Accommodation and food services",
+    "Public administration and defence; compulsory social security",
+    "Education",
+    "Human health and social work activities",
+    "Arts, entertainment and recreation",
+    "Other service activities",
+    "Real estate activities",
+    "Financial and insurance activities",
+    "Administrative and support service activities"
+  ],
 
-let barchart1 = new Barchart('div#barchart_energyuse', width, height, "Total Energy Use Per Year (Mtoe)");
+  "Quaternary": [ //research/technology based.
+    "Information and communication",
+    "Professional, scientific and technical activities",
+  ]
+};
+
+let barchart1 = new Barchart('div#barchart_energyuse', 1200, 500, "Total Energy Use Per Year (Mtoe)");
 d3.csv("data/Table1a_Direct_use.csv").then(dataset => {
     const totalData = dataset.map(d => ({
         k: d.Industry,           // year label
@@ -18,17 +48,103 @@ d3.csv("data/Table1a_Direct_use.csv").then(dataset => {
     console.log(document.querySelector('#barchart_energyuse'));
     console.log(totalData);
     barchart1.render(totalData);
+    let groupedChartInitialised = false; // to prevent the grouped chart from rendering multiple times when you go back to barchart
+
     document.querySelector('#barchart_energyuse')
       .addEventListener('click', () => {
-        window.location.href = 'energy.html';
-      });
+        document.getElementById('barchart_energyuse').style.display = 'none';
+        document.getElementById('grouped-view').style.display = 'block';
+        if (!groupedChartInitialised) {
+            showGroupedChart();
+            groupedChartInitialised = true;
+        }
+    });
+    document.getElementById('back-to-main')
+      .addEventListener('click', () => {
+
+        document.getElementById('grouped-view').style.display = 'none';
+        document.getElementById('barchart_energyuse').style.display = 'block';
+    });
 });
 
+function showGroupedChart() {
+
+    const groupedChart = new GroupedBarchart(
+        'div#Gbar1',
+        1200,
+        500,
+        "A graph to show energy Use (Mtoe)"
+    );
+
+    Promise.all([
+        d3.csv("data/Table1a_Direct_use.csv"),
+        d3.csv("data/Table1b_Reallocated_use.csv")
+    ]).then(([direct, reallocated]) => {
+
+        const energyColumns = direct.columns.slice(1, -1);
+        let selectedEnergy = energyColumns[0];
+
+        function updateCharts(column) {
+            const groupedData = direct.map((d, i) => ({
+                k: d.Industry,
+                direct: +d[column] || 0,
+                reallocated: +reallocated[i][column] || 0
+            }));
+
+            groupedChart.render(groupedData);
+        }
+
+        // --- Hierarchical buttons ---
+        const buttonsContainer = d3.select("#buttons");
+        buttonsContainer.html(""); // Clear existing buttons
+
+        Object.entries(INDUSTRY_GROUPS).forEach(([groupName, industries]) => {
+
+            // Group wrapper
+            const groupDiv = buttonsContainer.append("div")
+                .attr("class", "industry-group");
+
+            // Group header button (toggles sub-buttons visibility)
+            const header = groupDiv.append("button")
+                .attr("class", "group-header")
+                .text(groupName);
+
+            // Sub-buttons container (hidden by default)
+            const subDiv = groupDiv.append("div")
+                .attr("class", "sub-buttons")
+                .style("display", "none");
+
+            // Toggle sub-buttons on header click
+            header.on("click", () => {
+                const isHidden = subDiv.style("display") === "none";
+                subDiv.style("display", isHidden ? "flex" : "none");
+            });
+
+            // Industry sub-buttons — only show if they exist as energy columns
+            industries
+                .filter(industry => energyColumns.includes(industry))
+                .forEach(industry => {
+                    subDiv.append("button")
+                        .attr("class", "industry-btn")
+                        .text(industry)
+                        .on("click", (event) => {
+                            event.stopPropagation(); // Prevent header toggle
+                            d3.selectAll(".industry-btn").classed("active", false);
+                            d3.select(event.currentTarget).classed("active", true);
+                            updateCharts(industry);
+                        });
+                });
+        });
+
+        // Auto-select first available industry
+        updateCharts(energyColumns[0]);
+    });
+}
 
 
 
 
-
+//------------------------- Energy Sources -------------------------------
 
 const categories = {
   'Water & wind':       ['Hydroelectric power', 'Wind, wave, tidal'],
@@ -51,7 +167,7 @@ const colors = {
 };
 
 // 2. Initialize Class
-const myTreemap = new Treemap('#treemap-container', width, height, categories, colors);
+const myTreemap = new Treemap('#treemap-container', 1200, 500, categories, colors);
 
 // 3. Load Data and Render
 d3.csv('data/Table1c_Use_fromsources.csv').then(data => {
