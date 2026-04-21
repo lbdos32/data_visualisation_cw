@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UK Renewable Energy Treemap</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <title>Renewable Energy Dashboard</title>
+    <link rel="stylesheet" href="styles/index.css">
     <script src="libs/d3.v7.min.js"></script>
 </head>
 <body>
+<h1>Energy Use</h1>
+<div id="barchart_energyuse"></div>
 
-<h1>UK Renewable Energy Sources</h1>
+<div id="grouped-view" style="display:none;">
+    <div id="Gbar1"></div>
+    <div id="buttons"></div>
+    <button id="back-to-main">← Back</button>
+</div>
+<h1>Renewable Energy Sources</h1>
 
 <div id="year-row">
     <label for="year-select">Year</label>
@@ -21,5 +28,6 @@
 <button id="back-btn">← back to categories</button>
 <div id="treemap-container"></div>
 
-<script type="module" src="scripts/main.js"></script></body>
+<script type="module" src="scripts/main.js"></script>
+</body>
 </html>
