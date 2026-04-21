@@ -8,16 +8,25 @@
     <script src="libs/d3.v7.min.js"></script>
 </head>
 <body>
-<h1>Energy Use</h1>
+<div class="guide">
+    <strong class="guide-title">Guide</strong>
+    <ul>
+        <li>Click on the bars in the Total Energy Use Per Year (Mtoe) barchart to change the year and compare energy sources in the treemap.</li>
+        <li>Click on the comparison graph to compare direct use of energy to reallocated use.</li>
+        <li>Each industry is grouped into its respective sector. Click a sector to explore industries or view a summary.</li>
+    </ul>
+</div>
+<br>
+<h1>Renewable Energy Use</h1>
 <div id="barchart_energyuse"></div>
 <button id="compare-direct-reallocated">
-    Click here for compare of direct vs allocated.
+    Compare direct vs allocated energy use.
 </button><div id="grouped-view" style="display:none;">
     <div id="Gbar1"></div>
     <div id="buttons"></div>
     <button id="back-to-main">← Back</button>
 </div>
-<h1>Renewable Energy Sources</h1>
+<h1>A Treemap To Compare Renewable Energy Sources (1990 - 2023)</h1>
 
 <div id="year-row">
     <label for="year-select">Year</label>

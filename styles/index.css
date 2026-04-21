@@ -16,7 +16,99 @@ h1 {
     font-weight: 500;
     margin-bottom: 16px;
 }
+.guide {
+    background-color: #f5f7fa;
+    border-left: 5px solid #4a90e2;
+    padding: 15px 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
 
+.guide-title {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.guide ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.guide li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+    color: #34495e;
+}
+
+.guide li::marker {
+    color: #4a90e2;
+}
+/* Main action button */
+#compare-direct-reallocated {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: #fff;
+    border: none;
+    padding: 12px 18px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+#compare-direct-reallocated:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+}
+
+#compare-direct-reallocated:active {
+    transform: translateY(0);
+}
+
+
+/* Grouped view container */
+#grouped-view {
+    display: none; /* hide by default */
+    background-color: #f5f7fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+
+/* Back button (secondary style) */
+#back-to-main {
+    background-color: transparent;
+    color: #4a90e2;
+    border: 2px solid #4a90e2;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.2s ease;
+}
+
+#back-to-main:hover {
+    background-color: #4a90e2;
+    color: #fff;
+}
+
+
+/* Spacing for inner elements */
+#Gbar1 {
+    margin-bottom: 15px;
+}
+
+#buttons {
+    margin-bottom: 10px;
+}
 /* Charts */
 #barchart_energyuse,
 #bar2,

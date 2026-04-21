@@ -45,7 +45,7 @@ let barchart1 = new Barchart(
     'div#barchart_energyuse', //id for index.html
     1200, //width
     500, //height
-    "Total Energy Use Per Year (Mtoe)", //title
+    "A Bar Chart To Show The Total Renewable Energy Use (Mtoe)  Per Year (1990 - 2023)", //title
     (selectedKeys) => { //linked highlight between barchart and treemap
         if (updateTreemapYear && selectedKeys.length > 0) {
             updateTreemapYear(selectedKeys[selectedKeys.length - 1]); // use most recently clicked year
@@ -85,7 +85,7 @@ d3.csv("data/Table1a_Direct_use.csv").then(dataset => {
 //---------------------- Grouped Area Chart --------------------------
 
 function showGroupedChart() {
-    const groupedChart = new GroupedBarchart( 'div#Gbar1', 1200, 500, "A graph to show energy Use (Mtoe)");
+    const groupedChart = new GroupedBarchart( 'div#Gbar1', 1200, 500, "A Grouped Bar Chart To Compare Direct and Reallocated Renewable Energy Use (Mtoe) Per Year (1990 - 2023)");
 
     Promise.all([
         d3.csv("data/Table1a_Direct_use.csv"),
@@ -237,7 +237,7 @@ d3.csv('data/Table1c_Use_fromsources.csv').then(data => {
 
 //---------------------- Energy Sources Stacked Area Chart --------------------------
 
-const stackedArea = new StackedAreaChart('#stacked-area-container', 1200, 500, "Energy Use by Source Over Time (Mtoe)", categories, colors);
+const stackedArea = new StackedAreaChart('#stacked-area-container', 1200, 500, "A Stacked Area Chart To Show Renewable Energy Sources (Mtoe), Over Time (1990 - 2023)", categories, colors);
 
 d3.csv('data/Table1c_Use_fromsources.csv').then(dataset => {
     const sources = dataset.columns.slice(1, dataset.columns.length - 3);
