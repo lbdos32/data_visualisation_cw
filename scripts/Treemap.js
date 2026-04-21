@@ -120,21 +120,20 @@ export class Treemap {
           .attr('y', 16)
           .attr('font-size', '12px')
           .attr('fill', labelColor)
-          .attr('font-weight', '500'); // Slightly bolder for the title
+          .attr('font-weight', '500');
 
-        // Line 1: Append the Name
         textGroup.append('tspan')
           .attr('x', 5)
           .text(d.data.name);
 
-        // Line 2: Append the Data (Only if the box is tall enough)
-        if (ch > 38) {
+
+        if (ch > 38) { // Only if the box is tall enough
           textGroup.append('tspan')
             .attr('x', 5)
             .attr('dy', 14) // 'dy' drops it down to the next line
             .attr('font-size', '10.5px')
             .attr('font-weight', 'normal')
-            .attr('opacity', 0.85) // Make it slightly faded compared to the title
+            .attr('opacity', 0.85)
             .text(`${val} Mtoe (${percent}%)`);
         }
       });

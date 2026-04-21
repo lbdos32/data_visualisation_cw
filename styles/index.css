@@ -1,45 +1,136 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: system-ui, sans-serif; background: #fff; color: #111; padding: 24px; }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #fff;
+    color: #111;
+    padding: 24px;
+}
+
 h1 {
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 16px;
 }
-#barchart_energyuse, #bar2, #Gbar1, #line1 {
+
+/* Charts */
+#barchart_energyuse,
+#bar2,
+#Gbar1,
+#line1 {
     width: 100%;
     max-width: 1200px;
     height: 600px;
     margin: 20px auto;
     border: 2px solid #ccc;
 }
+#compare-direct-reallocated {
+    position: relative;
+    z-index: 10;
+}
+
 #barchart_energyuse:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     transition: all 0.2s ease-in-out;
 }
-#year-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; font-size: 13px; color: #555; }
-#year-select { font-size: 13px; padding: 4px 8px; border-radius: 6px; border: 1px solid #ccc; background: #fff; color: #111; }
+
+/* Controls */
+#year-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #555;
+}
+
+#year-select {
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #111;
+}
+
 #total-label {
     margin-left: 50px;
     font-size: 13px;
     color: #555;
 }
-#total-val { font-weight: 500; color: #111; }
-#breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #555; margin-bottom: 8px; min-height: 24px; }
-#breadcrumb .crumb-link { cursor: pointer; color: #1a6bb5; }
-#breadcrumb .crumb-link:hover { text-decoration: underline; }
-.crumb-sep { color: #aaa; }
-#back-btn { display: none; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; color: #1a6bb5; border: none; background: none; padding: 0; margin-bottom: 12px; }
-#back-btn:hover { text-decoration: underline; }
+
+#total-val {
+    font-weight: 500;
+    color: #111;
+}
+
+/* Breadcrumb */
+#breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 8px;
+    min-height: 24px;
+}
+
+#breadcrumb .crumb-link {
+    cursor: pointer;
+    color: #1a6bb5;
+}
+
+#breadcrumb .crumb-link:hover {
+    text-decoration: underline;
+}
+
+.crumb-sep {
+    color: #aaa;
+}
+
+/* Back button */
+#back-btn {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #1a6bb5;
+    border: none;
+    background: none;
+    padding: 0;
+    margin-bottom: 12px;
+}
+
+#back-btn:hover {
+    text-decoration: underline;
+}
+
+/* Treemap */
 #treemap-container {
     width: 100%;
     display: flex;
     justify-content: center;
 }
-.tm-cell { cursor: pointer; }
-.tm-cell rect { transition: opacity 0.15s; }
-.tm-cell:hover rect { opacity: 0.78; }
 
+.tm-cell {
+    cursor: pointer;
+}
+
+.tm-cell rect {
+    transition: opacity 0.15s;
+}
+
+.tm-cell:hover rect {
+    opacity: 0.78;
+}
+
+/* Industry menu */
 .industry-group {
     display: inline-block;
     margin: 4px;
@@ -48,7 +139,7 @@ h1 {
 
 .group-header {
     background: #4a6fa5;
-    color: white;
+    color: #fff;
     border: none;
     padding: 6px 14px;
     border-radius: 4px;
@@ -65,17 +156,18 @@ h1 {
     top: 100%;
     left: 0;
     z-index: 10;
+    display: flex;
     flex-direction: column;
     background: #f5f5f5;
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 4px;
     min-width: 280px;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .industry-btn {
-    background: white;
+    background: #fff;
     border: 1px solid #ccc;
     padding: 5px 10px;
     margin: 2px 0;
@@ -90,6 +182,6 @@ h1 {
 
 .industry-btn.active {
     background: #4a6fa5;
-    color: white;
+    color: #fff;
     border-color: #3a5a8a;
 }

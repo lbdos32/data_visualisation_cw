@@ -1,8 +1,10 @@
 import { Treemap } from './Treemap.js';
 import Barchart from "./Barchart.js";
 import GroupedBarchart from "./GroupedBarchart.js";
+import StackedAreaChart from "./StackedAreaChart.js";
 
-
+Global reference so the barchart can trigger treemap updates ---
+let updateTreemapYear = null;
 
 //------------------------- Energy Uses -------------------------------
 //Category grouping for industries.
@@ -39,18 +41,30 @@ const INDUSTRY_GROUPS = {
   ]
 };
 
-let barchart1 = new Barchart('div#barchart_energyuse', 1200, 500, "Total Energy Use Per Year (Mtoe)");
+let barchart1 = new Barchart(
+    'div#barchart_energyuse', //id for index.html
+    1200, //width
+    500, //height
+    "Total Energy Use Per Year (Mtoe)", //title
+    (selectedKeys) => { //linked highlight between barchart and treemap
+        if (updateTreemapYear && selectedKeys.length > 0) {
+            updateTreemapYear(selectedKeys[selectedKeys.length - 1]); // use most recently clicked year
+        }
+    }
+);
+
 d3.csv("data/Table1a_Direct_use.csv").then(dataset => {
     const totalData = dataset.map(d => ({
-        k: d.Industry,           // year label
+        k: d.Industry,           // industry label
         v: +d.Total || 0         // numeric value
     }));
     console.log(document.querySelector('#barchart_energyuse'));
     console.log(totalData);
     barchart1.render(totalData);
+
     let groupedChartInitialised = false; // to prevent the grouped chart from rendering multiple times when you go back to barchart
 
-    document.querySelector('#barchart_energyuse')
+    document.querySelector('#compare-direct-reallocated')
       .addEventListener('click', () => {
         document.getElementById('barchart_energyuse').style.display = 'none';
         document.getElementById('grouped-view').style.display = 'block';
@@ -59,28 +73,24 @@ d3.csv("data/Table1a_Direct_use.csv").then(dataset => {
             groupedChartInitialised = true;
         }
     });
+
     document.getElementById('back-to-main')
       .addEventListener('click', () => {
-
         document.getElementById('grouped-view').style.display = 'none';
         document.getElementById('barchart_energyuse').style.display = 'block';
     });
 });
 
-function showGroupedChart() {
 
-    const groupedChart = new GroupedBarchart(
-        'div#Gbar1',
-        1200,
-        500,
-        "A graph to show energy Use (Mtoe)"
-    );
+//---------------------- Grouped Area Chart --------------------------
+
+function showGroupedChart() {
+    const groupedChart = new GroupedBarchart( 'div#Gbar1', 1200, 500, "A graph to show energy Use (Mtoe)");
 
     Promise.all([
         d3.csv("data/Table1a_Direct_use.csv"),
         d3.csv("data/Table1b_Reallocated_use.csv")
     ]).then(([direct, reallocated]) => {
-
         const energyColumns = direct.columns.slice(1, -1);
         let selectedEnergy = energyColumns[0];
 
@@ -90,7 +100,28 @@ function showGroupedChart() {
                 direct: +d[column] || 0,
                 reallocated: +reallocated[i][column] || 0
             }));
+            groupedChart.render(groupedData);
+        }
 
+        function updateChartsForGroup(industriesList) {
+            const validIndustries = industriesList.filter(ind => energyColumns.includes(ind));
+
+            const groupedData = direct.map((d, i) => {
+                let directSum = 0;
+                let reallocSum = 0;
+
+                // Loop through all valid child industries and add them up for this year
+                validIndustries.forEach(ind => {
+                    directSum += +d[ind] || 0;
+                    reallocSum += +reallocated[i][ind] || 0;
+                });
+
+                return {
+                    k: d.Industry,
+                    direct: directSum,
+                    reallocated: reallocSum
+                };
+            });
             groupedChart.render(groupedData);
         }
 
@@ -99,12 +130,11 @@ function showGroupedChart() {
         buttonsContainer.html(""); // Clear existing buttons
 
         Object.entries(INDUSTRY_GROUPS).forEach(([groupName, industries]) => {
-
             // Group wrapper
             const groupDiv = buttonsContainer.append("div")
                 .attr("class", "industry-group");
 
-            // Group header button (toggles sub-buttons visibility)
+            // Group header button
             const header = groupDiv.append("button")
                 .attr("class", "group-header")
                 .text(groupName);
@@ -114,13 +144,18 @@ function showGroupedChart() {
                 .attr("class", "sub-buttons")
                 .style("display", "none");
 
-            // Toggle sub-buttons on header click
             header.on("click", () => {
+                // Toggle sub-menu visibility
                 const isHidden = subDiv.style("display") === "none";
                 subDiv.style("display", isHidden ? "flex" : "none");
+
+                d3.selectAll(".industry-btn, .group-header").classed("active", false);
+                d3.select(header.node()).classed("active", true);
+
+                updateChartsForGroup(industries);
             });
 
-            // Industry sub-buttons — only show if they exist as energy columns
+            // Industry sub-buttons
             industries
                 .filter(industry => energyColumns.includes(industry))
                 .forEach(industry => {
@@ -128,21 +163,20 @@ function showGroupedChart() {
                         .attr("class", "industry-btn")
                         .text(industry)
                         .on("click", (event) => {
-                            event.stopPropagation(); // Prevent header toggle
-                            d3.selectAll(".industry-btn").classed("active", false);
+                            event.stopPropagation();
+
+                            d3.selectAll(".industry-btn, .group-header").classed("active", false);
                             d3.select(event.currentTarget).classed("active", true);
+
                             updateCharts(industry);
                         });
                 });
         });
 
-        // Auto-select first available industry
+        // select the first available single industry on load
         updateCharts(energyColumns[0]);
     });
 }
-
-
-
 
 //------------------------- Energy Sources -------------------------------
 
@@ -166,10 +200,12 @@ const colors = {
   'Liquid biofuels':    { fill: '#CECBF6', stroke: '#534AB7', text: '#3C3489' }
 };
 
-// 2. Initialize Class
+
+//---------------------- Energy Sources Tree Map --------------------------
+
+
 const myTreemap = new Treemap('#treemap-container', 1200, 500, categories, colors);
 
-// 3. Load Data and Render
 d3.csv('data/Table1c_Use_fromsources.csv').then(data => {
   const sel = document.getElementById('year-select');
 
@@ -180,13 +216,43 @@ d3.csv('data/Table1c_Use_fromsources.csv').then(data => {
     sel.appendChild(o);
   });
 
-  // Initial Render
   const update = () => {
     const yearRow = data.find(d => d.Year === sel.value);
-    myTreemap.render(yearRow);
+    if(yearRow) myTreemap.render(yearRow);
   };
 
   sel.addEventListener('change', update);
   sel.value = data[data.length - 1].Year;
   update();
+
+  updateTreemapYear = (clickedYear) => {
+      const yearExists = data.some(d => d.Year === clickedYear);
+
+      if (yearExists) {
+          sel.value = clickedYear;
+          update();
+      }
+  };
+});
+
+//---------------------- Energy Sources Stacked Area Chart --------------------------
+
+const stackedArea = new StackedAreaChart('#stacked-area-container', 1200, 500, "Energy Use by Source Over Time (Mtoe)", categories, colors);
+
+d3.csv('data/Table1c_Use_fromsources.csv').then(dataset => {
+    const sources = dataset.columns.slice(1, dataset.columns.length - 3);
+
+    dataset.forEach(d => {
+        sources.forEach(s => {
+            d[s] = d[s] === "[low]" || d[s] === "" ? 0 : +d[s];
+        });
+    });
+
+    const cleaned = dataset.map(d => {
+        const row = { Year: +d.Year };
+        sources.forEach(s => row[s] = d[s]);
+        return row;
+    });
+
+    stackedArea.render(cleaned);
 });
