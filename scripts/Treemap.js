@@ -9,7 +9,6 @@ export class Treemap {
     this.container = d3.select(selector);
   }
 
-  // Utility to parse numbers safely
   parseVal(v) {
     const n = parseFloat(v);
     return isNaN(n) ? 0 : n;
@@ -51,8 +50,7 @@ export class Treemap {
       if (crumb) crumb.innerHTML = 'All categories';
 
       svg.selectAll('*').remove();
-      const hier = d3.hierarchy(fullRoot).sum(d => d.value).sort((a, b) => b.value - a.value);
-      d3.treemap().size([this.width, this.height]).padding(3)(hier);
+      const hier = d3.hierarchy(fullRoot).sum(d => d.children ? 0 : d.value).sort((a, b) => b.value - a.value);      d3.treemap().size([this.width, this.height]).padding(3)(hier);
 
       const cells = svg.selectAll('.tm-cell')
         .data(hier.children)
@@ -79,8 +77,7 @@ export class Treemap {
 
       svg.selectAll('*').remove();
       const hier = d3.hierarchy({ name: catName, children: catData.children })
-        .sum(d => d.value).sort((a, b) => b.value - a.value);
-
+        .sum(d => d.children ? 0 : d.value).sort((a, b) => b.value - a.value);
       d3.treemap().size([this.width, this.height]).padding(3)(hier);
 
       const base = this.colors[catName] || { fill: '#ccc', stroke: '#999', text: '#333' };
@@ -104,16 +101,42 @@ export class Treemap {
   }
 
   addLabels(cells, totalValue, isTopLevel, customColor) {
-    cells.each(function(d) {
-      const cw = d.x1 - d.x0, ch = d.y1 - d.y0;
-      if (cw < 40 || ch < 25) return;
-      const g = d3.select(this);
-      const labelColor = customColor || '#333';
+      cells.each(function(d) {
+        const cw = d.x1 - d.x0, ch = d.y1 - d.y0;
 
-      g.append('text')
-        .attr('x', 5).attr('y', 18)
-        .attr('font-size', '12px').attr('fill', labelColor)
-        .text(d.data.name);
-    });
-  }
+        // If the box is extremely tiny, don't draw any text at all
+        if (cw < 40 || ch < 25) return;
+
+        const g = d3.select(this);
+        const labelColor = customColor || '#333';
+
+        // Calculate the values
+        const percent = ((d.value / totalValue) * 100).toFixed(1);
+        const val = d.value.toFixed(2);
+
+        // Create the main text group
+        const textGroup = g.append('text')
+          .attr('x', 5)
+          .attr('y', 16)
+          .attr('font-size', '12px')
+          .attr('fill', labelColor)
+          .attr('font-weight', '500'); // Slightly bolder for the title
+
+        // Line 1: Append the Name
+        textGroup.append('tspan')
+          .attr('x', 5)
+          .text(d.data.name);
+
+        // Line 2: Append the Data (Only if the box is tall enough)
+        if (ch > 38) {
+          textGroup.append('tspan')
+            .attr('x', 5)
+            .attr('dy', 14) // 'dy' drops it down to the next line
+            .attr('font-size', '10.5px')
+            .attr('font-weight', 'normal')
+            .attr('opacity', 0.85) // Make it slightly faded compared to the title
+            .text(`${val} Mtoe (${percent}%)`);
+        }
+      });
+    }
 }

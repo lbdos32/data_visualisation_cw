@@ -1,17 +1,43 @@
 import { Treemap } from './Treemap.js';
+import Barchart from "./Barchart.js";
 
-// 1. Set Configuration
-const width = 1400;
+
+
+
+// 1. Set graph dimensions to be uniform.
+const width = 1200;
 const height = 500;
 
+
+let barchart1 = new Barchart('div#barchart_energyuse', width, height, "Total Energy Use Per Year (Mtoe)");
+d3.csv("data/Table1a_Direct_use.csv").then(dataset => {
+    const totalData = dataset.map(d => ({
+        k: d.Industry,           // year label
+        v: +d.Total || 0         // numeric value
+    }));
+    console.log(document.querySelector('#barchart_energyuse'));
+    console.log(totalData);
+    barchart1.render(totalData);
+    document.querySelector('#barchart_energyuse')
+      .addEventListener('click', () => {
+        window.location.href = 'energy.html';
+      });
+});
+
+
+
+
+
+
+
 const categories = {
-  'Water & wind':       ['Hydroelectric power', 'Wind wave tidal'],
+  'Water & wind':       ['Hydroelectric power', 'Wind, wave, tidal'],
   'Solar & geothermal': ['Solar photovoltaic', 'Geothermal aquifers'],
   'Gas':                ['Landfill gas', 'Sewage gas', 'Biogas'],
-  'Waste':              ['Municipal solid waste', 'Non-municipal solid waste'],
+  'Waste':              ['Municipal solid waste: biomass fraction', 'Non-municipal solid waste: biomass fraction'],
   'Animal & plant':     ['Animal Biomass', 'Plant Biomass', 'Straw'],
-  'Wood & derivatives': ['Wood', 'Wood Dry', 'Wood Seasoned', 'Wood Wet', 'Coffee logs', 'Woodchip', 'Wood Pellets', 'Wood Briquettes', 'Charcoal'],
-  'Liquid biofuels':    ['Liquid bio-fuels', 'Bioethanol', 'Biodiesel', 'SAF']
+  'Wood & derivatives': ['Wood', 'Wood - Dry', 'Wood - Seasoned', 'Wood - Wet', 'Coffee logs', 'Woodchip', 'Wood Pellets', 'Wood Briquettes', 'Charcoal'],
+  'Liquid biofuels':    ['Liquid bio-fuels', 'Bioethanol', 'Biodiesel', 'Sustainable Aviation Fuel (SAF) - bio based']
 };
 
 const colors = {
