@@ -3,7 +3,7 @@ import Barchart from "./Barchart.js";
 import GroupedBarchart from "./GroupedBarchart.js";
 import StackedAreaChart from "./StackedAreaChart.js";
 
-Global reference so the barchart can trigger treemap updates ---
+//Global reference so the barchart can trigger treemap updates ---
 let updateTreemapYear = null;
 
 //------------------------- Energy Uses -------------------------------
