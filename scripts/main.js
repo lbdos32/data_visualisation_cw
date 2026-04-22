@@ -205,7 +205,7 @@ const categories = {
   'Wood & derivatives': ['Wood', 'Wood - Dry', 'Wood - Seasoned', 'Wood - Wet', 'Coffee logs', 'Woodchip', 'Wood Pellets', 'Wood Briquettes', 'Charcoal'],
   'Liquid biofuels':    ['Liquid bio-fuels', 'Bioethanol', 'Biodiesel', 'Sustainable Aviation Fuel (SAF) - bio based']
 };
-
+//colours done by AI
 const colors = {
   'Water & wind':       { fill: '#B5D4F4', stroke: '#185FA5', text: '#0C447C' },
   'Solar & geothermal': { fill: '#FAC775', stroke: '#BA7517', text: '#633806' },

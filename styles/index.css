@@ -47,7 +47,6 @@ h1 {
 .guide li::marker {
     color: #4a90e2;
 }
-/* Main action button */
 #compare-direct-reallocated {
     background: linear-gradient(135deg, #4a90e2, #357abd);
     color: #fff;
@@ -71,9 +70,8 @@ h1 {
 }
 
 
-/* Grouped view container */
 #grouped-view {
-    display: none; /* hide by default */
+    display: none;
     background-color: #f5f7fa;
     padding: 20px;
     border-radius: 10px;
@@ -82,7 +80,6 @@ h1 {
 }
 
 
-/* Back button (secondary style) */
 #back-to-main {
     background-color: transparent;
     color: #4a90e2;
@@ -101,7 +98,6 @@ h1 {
 }
 
 
-/* Spacing for inner elements */
 #Gbar1 {
     margin-bottom: 15px;
 }
@@ -109,7 +105,6 @@ h1 {
 #buttons {
     margin-bottom: 10px;
 }
-/* Charts */
 #barchart_energyuse,
 #bar2,
 #Gbar1,
@@ -126,7 +121,6 @@ h1 {
 }
 
 
-/* Controls */
 #year-row {
     display: flex;
     align-items: center;
@@ -156,7 +150,6 @@ h1 {
     color: #111;
 }
 
-/* Breadcrumb */
 #breadcrumb {
     display: flex;
     align-items: center;
@@ -180,7 +173,6 @@ h1 {
     color: #aaa;
 }
 
-/* Back button */
 #back-btn {
     display: none;
     align-items: center;
@@ -198,7 +190,6 @@ h1 {
     text-decoration: underline;
 }
 
-/* Treemap */
 #treemap-container {
     width: 100%;
     display: flex;
@@ -217,7 +208,6 @@ h1 {
     opacity: 0.78;
 }
 
-/* Industry menu */
 .industry-group {
     display: inline-block;
     margin: 4px;
